@@ -1,0 +1,55 @@
+import random
+
+def generate_strings(count, start_line, login, password, ip, port, protocol):
+    country_codes = [
+        "US", "CA", "DE", "FR", "KR", "JP", "PL", "UA", "RO", "HU", "CZ", "ID", "TH", "VN", "IN", "LK",
+        "SG", "NL", "CH", "NO", "SE", "DK", "FI", "LU", "NZ", "AU", "AT"
+    ]
+
+    protocol_prefix = {
+        1: "http://",
+        2: "https://",
+        3: "socks5://",
+        4: ""
+    }
+
+    prefix = protocol_prefix.get(protocol, "socks5://")
+    generated_strings = []
+
+    for i in range(start_line, start_line + count):
+        country_code = random.choice(country_codes)
+        generated_string = f"{prefix}{login}_c_{country_code}_s_Ses{i}:{password}@{ip}:{port}"
+        generated_strings.append(generated_string)
+
+    return generated_strings
+
+# Запрашиваем у пользователя необходимые данные
+try:
+    print("\n\nКупить прокси: https://cabinet.proxyma.io/register?ref=feiueJlWAO2zXbeB")
+    print(' ')
+    login = input("Введите логин: ")
+    password = input("Введите пароль: ")
+    ip = input("Введите IP-адрес: ")
+    port = input("Введите порт: ")
+    count = int(input("Введите количество строк для генерации: "))
+    start_line = int(input("Введите номер стартовой строки: "))
+
+    print("Выберите протокол:")
+    print("1 - http")
+    print("2 - https")
+    print("3 - socks5")
+    print("4 - без протокола")
+    protocol = int(input("Введите номер протокола: "))
+
+    if count <= 0 or start_line <= 0:
+        print("Введите положительные числа.")
+    elif protocol not in [1, 2, 3, 4]:
+        print("Неверный выбор протокола.")
+    else:
+        result = generate_strings(count, start_line, login, password, ip, port, protocol)
+        with open("generated_strings.txt", "w") as file:
+            for line in result:
+                file.write(line + "\n")
+        print(f"Сгенерированные строки записаны в файл 'generated_strings.txt'.")
+except ValueError:
+    print("Введите корректные данные.")
